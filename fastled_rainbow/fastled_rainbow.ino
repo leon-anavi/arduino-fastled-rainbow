@@ -1,21 +1,24 @@
 #include <FastLED.h>
 
-#define LED_PIN     12
-#define NUM_LEDS    8
+#define LED_PIN1     12
+#define LED_PIN2    8
+#define NUM_LEDS    10
 #define BRIGHTNESS  64
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 
-CRGB leds[NUM_LEDS];
+CRGB leds1[NUM_LEDS];
+CRGB leds2[NUM_LEDS];
 
 // This example shows several ways to set up and use 'palettes' of colors
 // with FastLED.
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Hello addressable LED strip!");
+  Serial.println("Hello addressable LED strips!");
   delay( 3000 ); // power-up safety delay
-  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  FastLED.addLeds<LED_TYPE, LED_PIN1, COLOR_ORDER>(leds1, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  FastLED.addLeds<LED_TYPE, LED_PIN2, COLOR_ORDER>(leds2, NUM_LEDS).setCorrection( TypicalLEDStrip );
   FastLED.setBrightness(  BRIGHTNESS );
 }
 
@@ -33,7 +36,7 @@ void loop()
 
 void rainbowCycle(int wait, int cycles, int dim)
 {
-  Serial.println("Let's make a rainbow.");
+  Serial.println("Let's make a rainbow for 2 addressable LED strips.");
   //loop several times with same configurations and same delay
   for(int cycle=0; cycle < cycles; cycle++)
   {
@@ -52,8 +55,9 @@ void rainbowCycle(int wait, int cycles, int dim)
       //Set RGB color of each LED
       for(int i=0; i<NUM_LEDS; i++)
       {
-        CRGB ledColor = wheel(((i * 256 / NUM_LEDS) + (dir==0?j:k)) % 256,dim);        
-        leds[i]=ledColor;
+        CRGB ledColor = wheel(((i * 256 / NUM_LEDS) + (dir==0?j:k)) % 256,dim);
+        leds1[i]=ledColor;
+        leds2[i]=ledColor;
       }
 
       FastLED.show();
