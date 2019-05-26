@@ -12,67 +12,73 @@ CRGB leds[NUM_LEDS];
 // with FastLED.
 
 void setup() {
+  Serial.begin(115200);
+  Serial.println("Hello addressable LED strip!");
   delay( 3000 ); // power-up safety delay
   FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
   FastLED.setBrightness(  BRIGHTNESS );
 }
 
-
 void loop()
 {
   randomSeed(millis());
-   
+
   int wait=random(10,30);
   int dim=random(4,6);
   int max_cycles=8;
   int cycles=random(1,max_cycles+1);
-   
+
   rainbowCycle(wait, cycles, dim);
 }
 
-void rainbowCycle(int wait, int cycles, int dim) {
-
+void rainbowCycle(int wait, int cycles, int dim)
+{
+  Serial.println("Let's make a rainbow.");
   //loop several times with same configurations and same delay
-  for(int cycle=0; cycle < cycles; cycle++){
-  
+  for(int cycle=0; cycle < cycles; cycle++)
+  {
     byte dir=random(0,2);
     int k=255;
-    
+
     //loop through all colors in the wheel
-    for (int j=0; j < 256; j++,k--) { 
+    for (int j=0; j < 256; j++,k--)
+    {
       
-      if(k<0) {
+      if(k<0)
+      {
         k=255;
       }
       
       //Set RGB color of each LED
-      for(int i=0; i<NUM_LEDS; i++) {
-        
+      for(int i=0; i<NUM_LEDS; i++)
+      {
         CRGB ledColor = wheel(((i * 256 / NUM_LEDS) + (dir==0?j:k)) % 256,dim);        
         leds[i]=ledColor;
-        
       }
-      
+
       FastLED.show();
       FastLED.delay(wait);
     }
   }
-  
 }
 
-CRGB wheel(int WheelPos, int dim) {
+CRGB wheel(int WheelPos, int dim)
+{
   CRGB color;
-  if (85 > WheelPos) {
+  if (85 > WheelPos)
+  {
    color.r=0;
    color.g=WheelPos * 3/dim;
    color.b=(255 - WheelPos * 3)/dim;;
   } 
-  else if (170 > WheelPos) {
+  else if (170 > WheelPos)
+  {
    color.r=WheelPos * 3/dim;
    color.g=(255 - WheelPos * 3)/dim;
    color.b=0;
   }
-  else {
+  else
+  {
    color.r=(255 - WheelPos * 3)/dim;
    color.g=0;
    color.b=WheelPos * 3/dim;
